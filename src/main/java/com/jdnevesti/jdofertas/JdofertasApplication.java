@@ -1,18 +1,21 @@
 package com.jdnevesti.jdofertas;
 
+import org.directwebremoting.spring.DwrSpringServlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ImportResource;
 
 import com.jdnevesti.jdofertas.service.SocialMetaTagService;
 
+@ImportResource(locations = "classpath:dwr-spring.xml")
 @SpringBootApplication
 public class JdofertasApplication implements CommandLineRunner{
 
 	public static void main(String[] args) {
-		//TimeZone.setDefault(TimeZone.getTimeZone("GMT-3")); //setando a hora local
-		//System.out.println(LocalDateTime.now()); // mostrando no log
 		SpringApplication.run(JdofertasApplication.class, args); // executando a aplicação		
 	}
 	
@@ -27,4 +30,15 @@ public class JdofertasApplication implements CommandLineRunner{
 		System.out.println(tag.toString());	*/		
 	}
 	
+	@Bean
+	public ServletRegistrationBean<DwrSpringServlet> dwrSpringServlt(){
+		DwrSpringServlet dwrServlet = new DwrSpringServlet();
+		
+		ServletRegistrationBean<DwrSpringServlet> registrationBean = new ServletRegistrationBean<>(dwrServlet, "/dwr/*");
+		
+		registrationBean.addInitParameter("debug", "true");
+		registrationBean.addInitParameter("activeReverseAjaxEnabled", "true");
+		
+		return registrationBean;
+	}
 }
